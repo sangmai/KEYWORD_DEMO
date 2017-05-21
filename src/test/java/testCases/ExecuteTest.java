@@ -5,27 +5,21 @@ import java.util.Properties;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
+import common.AbstractTest;
 import excelExportAndFileIO.ReadExcelFile;
 import operation.ReadObject;
 import operation.UIOperation;
 
-public class ExecuteTest {
+public class ExecuteTest extends AbstractTest {
+	WebDriver driver;
 	@Test
 	public void testLogin() throws Exception {
-		WebDriver driver;
+		
 		//Browser define
-		DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
-		ieCapabilities.setCapability("nativeEvents", false);
-		ieCapabilities.setCapability("unexpectedAlertBehaviour", "accept");
-		ieCapabilities.setCapability("ignoreProtectedModeSettings", true);
-		ieCapabilities.setCapability("disable-popup-blocking", true);
-		ieCapabilities.setCapability("enablePersistentHover", true);
-		System.setProperty("webdriver.ie.driver", "src\\test\\resources\\IEDriverServer.exe");
-		driver = new InternetExplorerDriver(ieCapabilities);		 
+		driver = openBrowser("IE");
 		ReadExcelFile file = new ReadExcelFile();
 		ReadObject object = new ReadObject();
 		Properties allObjects = object.getObjectRepository();
@@ -60,5 +54,10 @@ public class ExecuteTest {
 			}
 		}
 	}
+	@AfterClass(alwaysRun = true)
+	public void setupAfterSuite() {
+//		generateUIReport(tests);
+		closeBrowser(driver);
 
+	}
 }

@@ -6,6 +6,7 @@
       <class name="testCases.ExecuteTest">
         <methods>
           <include name="testLogin"/>
+          <include name="setupAfterSuite"/>
         </methods>
       </class> <!-- testCases.ExecuteTest -->
     </classes>

@@ -5,7 +5,9 @@ import java.util.Properties;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class UIOperation {
+import common.AbstractPage;
+
+public class UIOperation extends AbstractPage{
 
 	WebDriver driver;
 
@@ -19,11 +21,11 @@ public class UIOperation {
 		switch (operation.toUpperCase()) {
 		case "CLICK":
 			// Perform click
-			driver.findElement(this.getObject(p, objectName, objectType)).click();
+			click(driver, this.getObject(p, objectName, objectType));
 			break;
 		case "SETTEXT":
 			// Set text on control
-			driver.findElement(this.getObject(p, objectName, objectType)).sendKeys(value);
+			type(driver, this.getObject(p, objectName, objectType), value);
 			break;
 
 		case "GOTOURL":
@@ -32,7 +34,7 @@ public class UIOperation {
 			break;
 		case "GETTEXT":
 			// Get text of an element
-			driver.findElement(this.getObject(p, objectName, objectType)).getText();
+			getText(driver, this.getObject(p, objectName, objectType));
 			break;
 
 		default:
@@ -49,42 +51,43 @@ public class UIOperation {
 	 * @return
 	 * @throws Exception
 	 */
-	private By getObject(Properties p, String objectName, String objectType) throws Exception {
+	private String getObject(Properties p, String objectName, String objectType) throws Exception {
 		// Find by xpath
 		if (objectType.equalsIgnoreCase("XPATH")) {
 
-			return By.xpath(p.getProperty(objectName));
+			return p.getProperty(objectName).toString();
 		}
-		// find by class
-		else if (objectType.equalsIgnoreCase("CLASSNAME")) {
+//		// find by class
+//		else if (objectType.equalsIgnoreCase("CLASSNAME")) {
+//
+//			return By.className(p.getProperty(objectName));
+//
+//		}
+//		// find by name
+//		else if (objectType.equalsIgnoreCase("NAME")) {
+//
+//			return By.name(p.getProperty(objectName));
+//
+//		}
+//		// Find by css
+//		else if (objectType.equalsIgnoreCase("CSS")) {
+//
+//			return By.cssSelector(p.getProperty(objectName));
+//
+//		}
+//		// find by link
+//		else if (objectType.equalsIgnoreCase("LINK")) {
+//
+//			return By.linkText(p.getProperty(objectName));
+//
+//		}
+//		// find by partial link
+//		else if (objectType.equalsIgnoreCase("PARTIALLINK")) {
+//
+//			return By.partialLinkText(p.getProperty(objectName));
 
-			return By.className(p.getProperty(objectName));
-
-		}
-		// find by name
-		else if (objectType.equalsIgnoreCase("NAME")) {
-
-			return By.name(p.getProperty(objectName));
-
-		}
-		// Find by css
-		else if (objectType.equalsIgnoreCase("CSS")) {
-
-			return By.cssSelector(p.getProperty(objectName));
-
-		}
-		// find by link
-		else if (objectType.equalsIgnoreCase("LINK")) {
-
-			return By.linkText(p.getProperty(objectName));
-
-		}
-		// find by partial link
-		else if (objectType.equalsIgnoreCase("PARTIALLINK")) {
-
-			return By.partialLinkText(p.getProperty(objectName));
-
-		} else {
+//		} else {
+		else{
 			throw new Exception("Wrong object type");
 		}
 	}

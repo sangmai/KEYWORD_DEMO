@@ -17,7 +17,6 @@ public class UIOperation extends AbstractPage {
 
 	public void perform(Properties p, String operation, String objectName, String objectType, String value,
 			String variable) throws Exception {
-		System.out.println("");
 		switch (operation.toUpperCase()) {
 		case "CLICK":
 			// Perform click
@@ -25,16 +24,17 @@ public class UIOperation extends AbstractPage {
 			break;
 		case "SETTEXT":
 			// Set text on control
+			//type value 
 			if (variable.equals("")) {
 				type(driver, this.getXpath(p, objectName, objectType), value);
-			}else{
+			} else {
+				//type variable
 				for (Map.Entry<String, String> entry : map.entrySet()) {
 					if (entry.getKey().equals(variable)) {
-						System.out.println(entry.getValue());
 						type(driver, this.getXpath(p, objectName, objectType), entry.getValue());
 					}
 				}
-			}			
+			}
 			break;
 
 		case "GOTOURL":
@@ -47,6 +47,12 @@ public class UIOperation extends AbstractPage {
 			break;
 		case "SETVARIABLE":
 			map.put(objectName, getText(driver, this.getXpath(p, objectName, objectType)));
+			break;
+		case "WAIT":
+			sleep(2);
+			break;
+		case "ACCEPTJAVASCRIPT":
+			acceptJavascriptAlert(driver);
 			break;
 		default:
 			break;

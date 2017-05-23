@@ -2,16 +2,16 @@
 <testng-results skipped="0" failed="0" total="1" passed="1">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="10296" started-at="2017-05-21T16:42:12Z" finished-at="2017-05-21T16:42:22Z">
+  <suite name="Default suite" duration-ms="10456" started-at="2017-05-23T15:52:50Z" finished-at="2017-05-23T15:53:00Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="10296" started-at="2017-05-21T16:42:12Z" finished-at="2017-05-21T16:42:22Z">
+    <test name="Default test" duration-ms="10456" started-at="2017-05-23T15:52:50Z" finished-at="2017-05-23T15:53:00Z">
       <class name="testCases.ExecuteTest">
-        <test-method status="PASS" signature="testLogin()[pri:0, instance:testCases.ExecuteTest@68bbe345]" name="testLogin" duration-ms="9410" started-at="2017-05-21T23:42:12Z" finished-at="2017-05-21T23:42:21Z">
+        <test-method status="PASS" signature="testLogin()[pri:0, instance:testCases.ExecuteTest@68bbe345]" name="testLogin" duration-ms="9621" started-at="2017-05-23T22:52:50Z" finished-at="2017-05-23T22:52:59Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testLogin -->
-        <test-method status="PASS" signature="setupAfterSuite()[pri:0, instance:testCases.ExecuteTest@68bbe345]" name="setupAfterSuite" is-config="true" duration-ms="875" started-at="2017-05-21T23:42:21Z" finished-at="2017-05-21T23:42:22Z">
+        <test-method status="PASS" signature="setupAfterSuite()[pri:0, instance:testCases.ExecuteTest@68bbe345]" name="setupAfterSuite" is-config="true" duration-ms="824" started-at="2017-05-23T22:52:59Z" finished-at="2017-05-23T22:53:00Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setupAfterSuite -->

@@ -39,18 +39,22 @@ public class ExecuteTest extends AbstractTest {
 			
 			// Check if the first cell contain a value, if yes, That means it is
 			// the new testcase name
+			try{
 			if (row.getCell(0).toString().length() == 0) {
 				// Print testcase detail on console
 				System.out.println(row.getCell(1).toString() + "----" + row.getCell(2).toString() + "----"
-						+ row.getCell(3).toString() + "----" + row.getCell(4).toString());
+						+ row.getCell(3).toString() + "----" + row.getCell(4).toString()+ "----" + row.getCell(5).toString());
 				
 				// Call perform function to perform operation on UI
 				operation.perform(allObjects, row.getCell(1).toString(), row.getCell(2).toString(),
-						row.getCell(3).toString(), row.getCell(4).toString());
+						row.getCell(3).toString(), row.getCell(4).toString(), row.getCell(5).toString());
 			} else {
 				
 				// Print the new testcase name when it started
-				System.out.println("\n New Testcase->" + row.getCell(0).toString() + " Started");
+				System.out.println("\nNew Testcase -->" + row.getCell(0).toString() + " Started");
+			}
+			}catch (Exception e){
+				e.printStackTrace();
 			}
 		}
 	}

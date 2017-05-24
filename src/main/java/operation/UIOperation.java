@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Properties;
 import org.openqa.selenium.WebDriver;
 import common.AbstractPage;
+import common.AbstractTest;
 
 public class UIOperation extends AbstractPage {
 
@@ -26,7 +27,7 @@ public class UIOperation extends AbstractPage {
 			// Set text on control
 			//type value 
 			if (variable.equals("")) {
-				type(driver, this.getXpath(p, objectName, objectType), value);
+				type(driver, this.getXpath(p, objectName, objectType), getValue(value));
 			} else {
 				//type variable
 				for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -39,7 +40,7 @@ public class UIOperation extends AbstractPage {
 
 		case "GOTOURL":
 			// Get url of application
-			driver.get(p.getProperty(value));
+			driver.get(p.getProperty(getValue(value)));
 			break;
 		case "GETTEXT":
 			// Get text of an element
@@ -68,7 +69,15 @@ public class UIOperation extends AbstractPage {
 	 * @return
 	 * @throws Exception
 	 */
-
+	private String getValue(String value){
+		switch (value){
+		case "RANDOMEMAIL":
+			return AbstractTest.RandomEmail();
+		}
+		
+		return value;
+		
+	}
 	private String getXpath(Properties p, String objectName, String objectType) throws Exception {
 		// Find by xpath --> Return Xpath as String
 		if (objectType.equalsIgnoreCase("XPATH")) {

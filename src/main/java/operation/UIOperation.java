@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import org.openqa.selenium.WebDriver;
-import common.AbstractPage;
+import common.AbstractAction;
 import common.AbstractTest;
 
-public class UIOperation extends AbstractPage {
+public class UIOperation extends AbstractAction {
 
 	WebDriver driver;
 	Map<String, String> map = new HashMap<String, String>();
@@ -16,9 +16,9 @@ public class UIOperation extends AbstractPage {
 		this.driver = driver;
 	}
 
-	public void perform(Properties p, String operation, String objectName, String objectType, String value,
+	public void perform(Properties p, String actions, String objectName, String objectType, String value,
 			String variable) throws Exception {
-		switch (operation.toUpperCase()) {
+		switch (actions.toUpperCase()) {
 		case "CLICK":
 			// Perform click
 			click(driver, this.getXpath(p, objectName, objectType));
@@ -55,20 +55,14 @@ public class UIOperation extends AbstractPage {
 		case "ACCEPTJAVASCRIPT":
 			acceptJavascriptAlert(driver);
 			break;
+		case "VERIFYEQUAL": 
+			
 		default:
 			break;
 		}
 	}
 
-	/**
-	 * Find element BY using object type and value
-	 * 
-	 * @param p
-	 * @param objectName
-	 * @param objectType
-	 * @return
-	 * @throws Exception
-	 */
+
 	private String getValue(String value){
 		switch (value){
 		case "RANDOMEMAIL":

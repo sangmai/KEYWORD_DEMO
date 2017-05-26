@@ -13,6 +13,10 @@ public class Constant {
 	public static final String configFilePath = "src/configurations/configuration.xml";
 	public static final String dataFilePath = "src/test/data.xml";
 	public static final String reportFilePath = "Report.xls";
+	public static final String testCaseFileName = "TestCase.xls";
+	public static final String keyWordSheet = "KeywordFramework";
+	public static final String reportSheet = "KeywordFramework";
+	public static final String excelFilePath = System.getProperty("user.dir") + "\\";
 	public static final String FOLDER_DOWNLOAD_ONE_WIN = "src/configurations/download";
 	// ===================driver===============================================
 	public static final String driverPath = "src//test//resources//";

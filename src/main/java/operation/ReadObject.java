@@ -15,7 +15,6 @@ public class ReadObject {
 				new File(System.getProperty("user.dir") + "\\src\\main\\java\\objects\\object.properties"));
 		// load all objects
 		p.load(stream);
-		System.out.println(p.toString());
 		return p;
 	}
 

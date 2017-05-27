@@ -36,6 +36,79 @@ public class AbstractAction {
 	protected WebElement element;
 	protected Logger log = Logger.getLogger(AbstractAction.class);
 
+	protected boolean verifyTrue(boolean condition, boolean halt) {
+		boolean pass = true;
+		if (halt == false) {
+			try {
+				Assert.assertTrue(condition);
+				log.info("==Verify condition is PASSED==");
+				System.out.println("==Verify condition is PASSED==");
+			} catch (Throwable e) {
+				pass = false;
+				VerificationFailures.getFailures().addFailureForTest(Reporter.getCurrentTestResult(), e);
+				Reporter.getCurrentTestResult().setThrowable(e);
+				log.info("==Verify condition is FAILED==");
+				System.out.println("==Verify condition is FAILED==");
+			}
+		} else {
+			Assert.assertTrue(condition);
+		}
+		return pass;
+	}
+
+	protected boolean verifyTrue(boolean condition) {
+		return verifyTrue(condition, false);
+	}
+
+	protected boolean verifyFalse(boolean condition, boolean halt) {
+		boolean pass = true;
+		if (halt == false) {
+			try {
+				Assert.assertFalse(condition);
+				log.info("==Verify condition is PASSED==");
+			} catch (Throwable e) {
+				pass = false;
+				VerificationFailures.getFailures().addFailureForTest(Reporter.getCurrentTestResult(), e);
+				Reporter.getCurrentTestResult().setThrowable(e);
+				log.info("==Verify condition is FAILED==");
+			}
+		} else {
+			Assert.assertFalse(condition);
+		}
+		return pass;
+
+	}
+
+	protected boolean verifyFalse(boolean condition) {
+		return verifyFalse(condition, false);
+	}
+
+	protected boolean verifyEquals(Object actual, Object expected, boolean halt) {
+		boolean pass = true;
+		if (halt == false) {
+			try {
+				Assert.assertEquals(actual, expected);
+				log.info("==Verify condition is PASSED==");
+			} catch (Throwable e) {
+				pass = false;
+				VerificationFailures.getFailures().addFailureForTest(Reporter.getCurrentTestResult(), e);
+				Reporter.getCurrentTestResult().setThrowable(e);
+				log.info("==Verify condition is FAILED==");
+			}
+		} else {
+			Assert.assertEquals(actual, expected);
+		}
+		return pass;
+	}
+
+	protected boolean verifyEquals(Object actual, Object expected) {
+		return verifyEquals(actual, expected, false);
+	}
+	
+	
+	
+	
+	
 	public void click(WebDriver driver, String locator) {
 		waitForElement(driver, locator, Constant.longWaitTime);
 		control.findElement(driver, locator).click();

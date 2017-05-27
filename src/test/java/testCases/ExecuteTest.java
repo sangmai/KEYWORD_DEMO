@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
 import org.apache.poi.ss.usermodel.Cell;
@@ -24,10 +25,12 @@ public class ExecuteTest extends AbstractTest {
 
 	WebDriver driver;
 	ReadExcelFile file = new ReadExcelFile();
-
+	
 	@BeforeClass(alwaysRun = true)
 	public void setup() {
-		driver = openBrowser("IE");
+		Constant.driver = openBrowser("IE");
+		driver = Constant.driver;
+		Constant.mapVarialbe = new HashMap<String, String>();
 	}
 
 	@Test(dataProvider = "testCasePos")
@@ -56,10 +59,10 @@ public class ExecuteTest extends AbstractTest {
 					if (row.getCell(0).toString().length() == 0) {
 
 						System.out.println(row.getCell(1).toString() + "----" + row.getCell(2).toString() + "----"
-								+ row.getCell(3).toString() + "----" + row.getCell(5).toString());
+								+ row.getCell(3).toString() + "----" + row.getCell(4).toString());
 
 						operation.perform(allObjects, row.getCell(1).toString(), row.getCell(2).toString(),
-								row.getCell(3).toString(), row.getCell(4).toString(), row.getCell(5).toString());
+								row.getCell(3).toString(), row.getCell(4).toString());
 
 					} else {
 						break;

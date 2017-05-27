@@ -1,38 +1,39 @@
 package operation;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import org.openqa.selenium.WebDriver;
 import common.AbstractAction;
 import common.AbstractTest;
+import common.Constant;
 
 public class UIOperation extends AbstractAction {
 
 	WebDriver driver;
-	Map<String, String> map = new HashMap<String, String>();
 
 	public UIOperation(WebDriver driver) {
 		this.driver = driver;
 	}
 
-	public void perform(Properties p, String actions, String objectName, String objectType, String value,
-			String variable) throws Exception {
+	public void perform(Properties p, String actions, String objectName, String value, String variable)
+			throws Exception {
 		switch (actions.toUpperCase()) {
 		case "CLICK":
 			// Perform click
-			click(driver, this.getXpath(p, objectName, objectType));
+			waitForElement(driver, this.getXpath(p, objectName), Constant.longWaitTime);
+			click(driver, this.getXpath(p, objectName));
 			break;
 		case "SETTEXT":
-			// Set text on control
-			//type value 
+			// Type value
 			if (variable.equals("")) {
-				type(driver, this.getXpath(p, objectName, objectType), getValue(value));
+				waitForElement(driver, this.getXpath(p, objectName), Constant.longWaitTime);
+				type(driver, this.getXpath(p, objectName), getValue(value));
 			} else {
-				//type variable
-				for (Map.Entry<String, String> entry : map.entrySet()) {
+				// Type variable
+				for (Map.Entry<String, String> entry : Constant.mapVarialbe.entrySet()) {
 					if (entry.getKey().equals(variable)) {
-						type(driver, this.getXpath(p, objectName, objectType), entry.getValue());
+						waitForElement(driver, this.getXpath(p, objectName), Constant.longWaitTime);
+						type(driver, this.getXpath(p, objectName), entry.getValue());
 					}
 				}
 			}
@@ -44,10 +45,10 @@ public class UIOperation extends AbstractAction {
 			break;
 		case "GETTEXT":
 			// Get text of an element
-			getText(driver, this.getXpath(p, objectName, objectType));
+			getText(driver, this.getXpath(p, objectName));
 			break;
 		case "SETVARIABLE":
-			map.put(objectName, getText(driver, this.getXpath(p, objectName, objectType)));
+			Constant.mapVarialbe.put(objectName, getText(driver, this.getXpath(p, objectName)));
 			break;
 		case "WAIT":
 			sleep(2);
@@ -55,61 +56,69 @@ public class UIOperation extends AbstractAction {
 		case "ACCEPTJAVASCRIPT":
 			acceptJavascriptAlert(driver);
 			break;
-		case "VERIFYEQUAL": 
+		case "VERIFYTRUE":
+			waitForElement(driver, this.getXpath(p, objectName), value, Constant.longWaitTime);
+			verifyTrue(isControlDisplayed(driver, this.getXpath(p, objectName), value));
+			break;
+		case "CHECKCONDITION":
 			
+			break;
 		default:
 			break;
 		}
 	}
 
-
-	private String getValue(String value){
-		switch (value){
+	private String getValue(String value) {
+		switch (value) {
 		case "RANDOMEMAIL":
 			return AbstractTest.RandomEmail();
 		}
-		
+
 		return value;
-		
+
 	}
-	private String getXpath(Properties p, String objectName, String objectType) throws Exception {
+
+	private String getXpath(Properties p, String objectName) {
 		// Find by xpath --> Return Xpath as String
-		if (objectType.equalsIgnoreCase("XPATH")) {
+		String xpath = null;
+		try {
+			xpath = p.getProperty(objectName).toString();
+			// }
+			// // find by class
+			// else if (objectType.equalsIgnoreCase("CLASSNAME")) {
+			//
+			// return By.className(p.getProperty(objectName));
+			//
+			// }
+			// // find by name
+			// else if (objectType.equalsIgnoreCase("NAME")) {
+			//
+			// return By.name(p.getProperty(objectName));
+			//
+			// }
+			// // Find by css
+			// else if (objectType.equalsIgnoreCase("CSS")) {
+			//
+			// return By.cssSelector(p.getProperty(objectName));
+			//
+			// }
+			// // find by link
+			// else if (objectType.equalsIgnoreCase("LINK")) {
+			//
+			// return By.linkText(p.getProperty(objectName));
+			//
+			// }
+			// // find by partial link
+			// else if (objectType.equalsIgnoreCase("PARTIALLINK")) {
+			//
+			// return By.partialLinkText(p.getProperty(objectName));
 
-			return p.getProperty(objectName).toString();
+			// } else {
+		} catch (Exception e) {
+			// throw new Exception("Wrong object type");
+			e.printStackTrace();
 		}
-		// // find by class
-		// else if (objectType.equalsIgnoreCase("CLASSNAME")) {
-		//
-		// return By.className(p.getProperty(objectName));
-		//
-		// }
-		// // find by name
-		// else if (objectType.equalsIgnoreCase("NAME")) {
-		//
-		// return By.name(p.getProperty(objectName));
-		//
-		// }
-		// // Find by css
-		// else if (objectType.equalsIgnoreCase("CSS")) {
-		//
-		// return By.cssSelector(p.getProperty(objectName));
-		//
-		// }
-		// // find by link
-		// else if (objectType.equalsIgnoreCase("LINK")) {
-		//
-		// return By.linkText(p.getProperty(objectName));
-		//
-		// }
-		// // find by partial link
-		// else if (objectType.equalsIgnoreCase("PARTIALLINK")) {
-		//
-		// return By.partialLinkText(p.getProperty(objectName));
+		return xpath;
 
-		// } else {
-		else {
-			throw new Exception("Wrong object type");
-		}
 	}
 }

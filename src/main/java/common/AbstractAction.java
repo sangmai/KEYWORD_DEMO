@@ -1,14 +1,10 @@
 package common;
 
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -25,11 +21,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
-
-import com.galenframework.api.Galen;
-import com.galenframework.reports.GalenTestInfo;
-import com.galenframework.reports.model.LayoutReport;
-
 
 public class AbstractAction {
 	protected AutomationControl control = new AutomationControl();
@@ -104,11 +95,7 @@ public class AbstractAction {
 	protected boolean verifyEquals(Object actual, Object expected) {
 		return verifyEquals(actual, expected, false);
 	}
-	
-	
-	
-	
-	
+
 	public void click(WebDriver driver, String locator) {
 		waitForElement(driver, locator, Constant.longWaitTime);
 		control.findElement(driver, locator).click();
@@ -120,33 +107,36 @@ public class AbstractAction {
 		element.click();
 	}
 
-//	public void checkUIpage(WebDriver driver, List<GalenTestInfo> tests, String gspecPath, String device,
-//			String message) {
-//		// Create a layoutReport object
-//		// checkLayout function checks the layout and returns a LayoutReport
-//		// object
-//		try {
-//			LayoutReport layoutReport = Galen.checkLayout(driver, gspecPath, Arrays.asList(device));
-//			// Create a tests list
-//			// List<GalenTestInfo> tests = new LinkedList<GalenTestInfo>();
-//			// Create a GalenTestInfo object
-//			GalenTestInfo test = GalenTestInfo.fromString("Report cho UI check");
-//			// Get layoutReport and assign to test object
-//			test.getReport().layout(layoutReport, message);
-//			// Add test object to the tests list
-//			tests.add(test);
-//			if (layoutReport.errors() > 0) {
-//				log.info("====Verify GUI is FAILED====");
-//				Assert.fail("Layout test failed");
-//			} else {
-//				log.info("====Verify GUI is PASSED====");
-//			}
-//		} catch (Throwable e) {
-//			VerificationFailures.getFailures().addFailureForTest(Reporter.getCurrentTestResult(), e);
-//			Reporter.getCurrentTestResult().setThrowable(e);
-//
-//		}
-//	}
+	// public void checkUIpage(WebDriver driver, List<GalenTestInfo> tests,
+	// String gspecPath, String device,
+	// String message) {
+	// // Create a layoutReport object
+	// // checkLayout function checks the layout and returns a LayoutReport
+	// // object
+	// try {
+	// LayoutReport layoutReport = Galen.checkLayout(driver, gspecPath,
+	// Arrays.asList(device));
+	// // Create a tests list
+	// // List<GalenTestInfo> tests = new LinkedList<GalenTestInfo>();
+	// // Create a GalenTestInfo object
+	// GalenTestInfo test = GalenTestInfo.fromString("Report cho UI check");
+	// // Get layoutReport and assign to test object
+	// test.getReport().layout(layoutReport, message);
+	// // Add test object to the tests list
+	// tests.add(test);
+	// if (layoutReport.errors() > 0) {
+	// log.info("====Verify GUI is FAILED====");
+	// Assert.fail("Layout test failed");
+	// } else {
+	// log.info("====Verify GUI is PASSED====");
+	// }
+	// } catch (Throwable e) {
+	// VerificationFailures.getFailures().addFailureForTest(Reporter.getCurrentTestResult(),
+	// e);
+	// Reporter.getCurrentTestResult().setThrowable(e);
+	//
+	// }
+	// }
 
 	// public void type(WebDriver driver, String locator, String text) {
 	// control.findElement(driver, locator).clear();
@@ -247,7 +237,7 @@ public class AbstractAction {
 		alert.accept();
 	}
 
-	public boolean isAlertPresent(WebDriver driver) {
+	public static boolean isAlertPresent(WebDriver driver) {
 		try {
 			driver.switchTo().alert();
 			return true;
@@ -283,8 +273,9 @@ public class AbstractAction {
 	public void waitForAjaxDone(WebDriver driver) {
 		while (true) {
 			Boolean ajaxIsComplete = (Boolean) executeJavaScript(driver, "return jQuery.active == 0");
-			if (ajaxIsComplete)
+			if (ajaxIsComplete) {
 				break;
+			}
 			sleep(5);
 		}
 	}

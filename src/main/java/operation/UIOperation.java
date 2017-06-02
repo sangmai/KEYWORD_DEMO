@@ -2,7 +2,9 @@ package operation;
 
 import java.util.Map;
 import java.util.Properties;
+
 import org.openqa.selenium.WebDriver;
+
 import common.AbstractAction;
 import common.AbstractTest;
 import common.Constant;
@@ -60,15 +62,31 @@ public class UIOperation extends AbstractAction {
 			waitForElement(driver, this.getXpath(p, objectName), value, Constant.longWaitTime);
 			verifyTrue(isControlDisplayed(driver, this.getXpath(p, objectName), value));
 			break;
-		case "CHECKCONDITION":
-			
+		case "IF":
+			// processIfElse(driver,);
+
 			break;
 		default:
 			break;
 		}
 	}
 
-	private String getValue(String value) {
+	public void processIfElse(WebDriver driver, String action, String objectName, String condition, String value,
+			String variable) {
+		if (condition == value) {
+
+		}
+	}
+
+	public boolean processCondition(WebDriver driver, String condition) {
+		switch (condition) {
+		case "isAlertPresent":
+			return AbstractAction.isAlertPresent(driver);
+		}
+		return false;
+	}
+
+	public String getValue(String value) {
 		switch (value) {
 		case "RANDOMEMAIL":
 			return AbstractTest.RandomEmail();

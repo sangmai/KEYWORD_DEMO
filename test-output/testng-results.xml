@@ -2,20 +2,20 @@
 <testng-results skipped="0" failed="0" total="2" passed="2">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="37475" started-at="2017-05-26T15:37:47Z" finished-at="2017-05-26T15:38:24Z">
+  <suite name="Default suite" duration-ms="71888" started-at="2017-05-29T16:01:18Z" finished-at="2017-05-29T16:02:30Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="37475" started-at="2017-05-26T15:37:47Z" finished-at="2017-05-26T15:38:24Z">
+    <test name="Default test" duration-ms="71888" started-at="2017-05-29T16:01:18Z" finished-at="2017-05-29T16:02:30Z">
       <class name="testCases.ExecuteTest">
-        <test-method status="PASS" signature="setup()[pri:0, instance:testCases.ExecuteTest@467aecef]" name="setup" is-config="true" duration-ms="2542" started-at="2017-05-26T22:37:47Z" finished-at="2017-05-26T22:37:49Z">
+        <test-method status="PASS" signature="setup()[pri:0, instance:testCases.ExecuteTest@175c2241]" name="setup" is-config="true" duration-ms="2602" started-at="2017-05-29T23:01:18Z" finished-at="2017-05-29T23:01:21Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setup -->
-        <test-method status="PASS" signature="testLogin(java.lang.String, int)[pri:0, instance:testCases.ExecuteTest@467aecef]" name="testLogin" duration-ms="28394" started-at="2017-05-26T22:37:50Z" data-provider="testCasePos" finished-at="2017-05-26T22:38:18Z">
+        <test-method status="PASS" signature="testLogin(java.lang.String, int)[pri:0, instance:testCases.ExecuteTest@175c2241]" name="testLogin" duration-ms="63951" started-at="2017-05-29T23:01:21Z" data-provider="testCasePos" finished-at="2017-05-29T23:02:25Z">
           <params>
             <param index="0">
               <value>
-                <![CDATA[Reset Login In Application]]>
+                <![CDATA[Login In Application]]>
               </value>
             </param>
             <param index="1">
@@ -27,7 +27,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testLogin -->
-        <test-method status="PASS" signature="testLogin(java.lang.String, int)[pri:0, instance:testCases.ExecuteTest@467aecef]" name="testLogin" duration-ms="3908" started-at="2017-05-26T22:38:18Z" data-provider="testCasePos" finished-at="2017-05-26T22:38:22Z">
+        <test-method status="PASS" signature="testLogin(java.lang.String, int)[pri:0, instance:testCases.ExecuteTest@175c2241]" name="testLogin" duration-ms="4208" started-at="2017-05-29T23:02:25Z" data-provider="testCasePos" finished-at="2017-05-29T23:02:29Z">
           <params>
             <param index="0">
               <value>
@@ -36,14 +36,14 @@
             </param>
             <param index="1">
               <value>
-                <![CDATA[22]]>
+                <![CDATA[20]]>
               </value>
             </param>
           </params>
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testLogin -->
-        <test-method status="PASS" signature="setupAfterSuite()[pri:0, instance:testCases.ExecuteTest@467aecef]" name="setupAfterSuite" is-config="true" duration-ms="2454" started-at="2017-05-26T22:38:22Z" finished-at="2017-05-26T22:38:24Z">
+        <test-method status="PASS" signature="setupAfterSuite()[pri:0, instance:testCases.ExecuteTest@175c2241]" name="setupAfterSuite" is-config="true" duration-ms="918" started-at="2017-05-29T23:02:29Z" finished-at="2017-05-29T23:02:30Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setupAfterSuite -->

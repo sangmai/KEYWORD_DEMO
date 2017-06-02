@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -15,6 +16,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
 import common.AbstractTest;
 import common.Constant;
 import excelExportAndFileIO.ReadExcelFile;
@@ -25,7 +27,7 @@ public class ExecuteTest extends AbstractTest {
 
 	WebDriver driver;
 	ReadExcelFile file = new ReadExcelFile();
-	
+
 	@BeforeClass(alwaysRun = true)
 	public void setup() {
 		Constant.driver = openBrowser("IE");
@@ -42,12 +44,17 @@ public class ExecuteTest extends AbstractTest {
 		try {
 			Sheet sheet = file.readExcel(Constant.excelFilePath, Constant.testCaseFileName, Constant.keyWordSheet);
 
-			int rowCount = sheet.getLastRowNum() - sheet.getFirstRowNum();
+			int lastRowNum = sheet.getLastRowNum() - sheet.getFirstRowNum();
 
-			for (int i = pos + 1; i < rowCount + 1; i++) {
+			for (int i = pos + 1; i < lastRowNum + 1; i++) {
 
 				Row row = sheet.getRow(i);
 				Row preRow = sheet.getRow(i - 1);
+				String actions = row.getCell(1).toString();
+				String objectName = row.getCell(2).toString();
+				String condition = row.getCell(3).toString();
+				String value = row.getCell(4).toString();
+				String variable = row.getCell(5).toString();
 
 				if (preRow.getCell(0).toString().length() != 0) {
 					System.out.println("\nTESTCASE :" + preRow.getCell(0).toString().toUpperCase() + " IS RUNNING\n");
@@ -58,12 +65,19 @@ public class ExecuteTest extends AbstractTest {
 				try {
 					if (row.getCell(0).toString().length() == 0) {
 
-						System.out.println(row.getCell(1).toString() + "----" + row.getCell(2).toString() + "----"
-								+ row.getCell(3).toString() + "----" + row.getCell(4).toString());
+						System.out.println(actions + "----" + objectName + "----" + value + "----" + variable);
 
-						operation.perform(allObjects, row.getCell(1).toString(), row.getCell(2).toString(),
-								row.getCell(3).toString(), row.getCell(4).toString());
+						if (actions.equals("IF")) {
+							if (operation.processCondition(driver, condition) == Boolean.parseBoolean(value)) {
 
+							} else {
+								while (i < lastRowNum && !sheet.getRow(i + 1).getCell(1).toString().equals("ELSE")) {
+									System.out.println(sheet.getRow(i + 1).getCell(1).toString());
+									i++;
+								}
+							}
+						}
+						operation.perform(allObjects, actions, objectName, value, variable);
 					} else {
 						break;
 					}

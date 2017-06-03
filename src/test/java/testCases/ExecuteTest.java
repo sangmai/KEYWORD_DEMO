@@ -39,7 +39,7 @@ public class ExecuteTest extends AbstractTest {
 	}
 
 	@Test(dataProvider = "testCasePos")
-	public void executeTest(String testcaseName, int pos) throws IOException {
+	public void executeKeywordTest(String testcaseName, int pos) throws IOException {
 
 		ReadObject object = new ReadObject();
 		Properties allObjects = object.getObjectRepository();
@@ -67,20 +67,17 @@ public class ExecuteTest extends AbstractTest {
 
 				try {
 					if (row.getCell(0).toString().length() == 0) {
-
+						System.out.println(actions + "----" + objectName + "----" + value + "----" + variable);
 						if (actions.equals("IF")) {
 							if (operation.processCondition(driver, condition) == Boolean.parseBoolean(value)) {
-								for (int posi : processIfElse("IF")) {
-
+								for (int j : processIfElse("IF", pos)) {
+									i = j;
+									break;
 								}
 							} else {
-								// while (i < lastRowNum && !sheet.getRow(i +
-								// 1).getCell(1).toString().equals("ELSE")) {
-								// System.out.println(sheet.getRow(i +
-								// 1).getCell(1).toString());
-								// i++;
-								for (int posi : processIfElse("ELSE")) {
-									this.executeTest(testcaseName, posi);
+								for (int j : processIfElse("ELSE", pos)) {
+									i = j;
+									break;
 								}
 							}
 						}
@@ -88,11 +85,10 @@ public class ExecuteTest extends AbstractTest {
 							Constant.currentTestCasePosition.put(testcaseName, i + 2);
 							for (Map.Entry<String, Integer> entry : testcasePos().entrySet()) {
 								if (entry.getKey().equals(value)) {
-									this.executeTest(entry.getKey(), entry.getValue());
+									this.executeKeywordTest(entry.getKey(), entry.getValue());
 								}
 							}
 						}
-						System.out.println(actions + "----" + objectName + "----" + value + "----" + variable);
 						operation.perform(allObjects, actions, objectName, value, variable);
 					} else {
 						break;
@@ -156,11 +152,11 @@ public class ExecuteTest extends AbstractTest {
 
 	}
 
-	private ArrayList<Integer> processIfElse(String condition) {
+	private ArrayList<Integer> processIfElse(String condition, int startPosition) {
 		ArrayList<Integer> ifElseBlock = new ArrayList<Integer>();
 		try {
 			excelSheet = file.readExcel(Constant.excelFilePath, Constant.testCaseFileName, Constant.keyWordSheet);
-			for (int i = 1; i <= excelSheet.getLastRowNum(); i++) {
+			for (int i = startPosition + 1; i <= excelSheet.getLastRowNum(); i++) {
 				Cell actionName = excelSheet.getRow(i).getCell(1);
 				if (actionName.toString().equals(condition.toUpperCase())) {
 					while (i < excelSheet.getLastRowNum()
@@ -170,7 +166,7 @@ public class ExecuteTest extends AbstractTest {
 					}
 				} else if (actionName.toString().equals(condition.toUpperCase())) {
 					while (i < excelSheet.getLastRowNum()
-							&& excelSheet.getRow(i + 1).getCell(1).toString().equals("ENDIF")) {
+							&& !excelSheet.getRow(i + 1).getCell(1).toString().equals("ENDIF")) {
 						ifElseBlock.add(i);
 						i++;
 					}

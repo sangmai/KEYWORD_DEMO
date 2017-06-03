@@ -62,19 +62,11 @@ public class UIOperation extends AbstractAction {
 			waitForElement(driver, this.getXpath(p, objectName), value, Constant.longWaitTime);
 			verifyTrue(isControlDisplayed(driver, this.getXpath(p, objectName), value));
 			break;
-		case "IF":
-			// processIfElse(driver,);
+		case "RUNTESTCASE":
 
 			break;
 		default:
 			break;
-		}
-	}
-
-	public void processIfElse(WebDriver driver, String action, String objectName, String condition, String value,
-			String variable) {
-		if (condition == value) {
-
 		}
 	}
 

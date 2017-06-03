@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -27,16 +28,18 @@ public class ExecuteTest extends AbstractTest {
 
 	WebDriver driver;
 	ReadExcelFile file = new ReadExcelFile();
+	Sheet excelSheet;
 
 	@BeforeClass(alwaysRun = true)
 	public void setup() {
 		Constant.driver = openBrowser("IE");
 		driver = Constant.driver;
 		Constant.mapVarialbe = new HashMap<String, String>();
+		Constant.currentTestCasePosition = new HashMap<String, Integer>();
 	}
 
 	@Test(dataProvider = "testCasePos")
-	public void testLogin(String testcaseName, int pos) throws IOException {
+	public void executeTest(String testcaseName, int pos) throws IOException {
 
 		ReadObject object = new ReadObject();
 		Properties allObjects = object.getObjectRepository();
@@ -65,18 +68,31 @@ public class ExecuteTest extends AbstractTest {
 				try {
 					if (row.getCell(0).toString().length() == 0) {
 
-						System.out.println(actions + "----" + objectName + "----" + value + "----" + variable);
-
 						if (actions.equals("IF")) {
 							if (operation.processCondition(driver, condition) == Boolean.parseBoolean(value)) {
+								for (int posi : processIfElse("IF")) {
 
+								}
 							} else {
-								while (i < lastRowNum && !sheet.getRow(i + 1).getCell(1).toString().equals("ELSE")) {
-									System.out.println(sheet.getRow(i + 1).getCell(1).toString());
-									i++;
+								// while (i < lastRowNum && !sheet.getRow(i +
+								// 1).getCell(1).toString().equals("ELSE")) {
+								// System.out.println(sheet.getRow(i +
+								// 1).getCell(1).toString());
+								// i++;
+								for (int posi : processIfElse("ELSE")) {
+									this.executeTest(testcaseName, posi);
 								}
 							}
 						}
+						if (actions.equals("RUNTESTCASE")) {
+							Constant.currentTestCasePosition.put(testcaseName, i + 2);
+							for (Map.Entry<String, Integer> entry : testcasePos().entrySet()) {
+								if (entry.getKey().equals(value)) {
+									this.executeTest(entry.getKey(), entry.getValue());
+								}
+							}
+						}
+						System.out.println(actions + "----" + objectName + "----" + value + "----" + variable);
 						operation.perform(allObjects, actions, objectName, value, variable);
 					} else {
 						break;
@@ -85,7 +101,9 @@ public class ExecuteTest extends AbstractTest {
 					e.printStackTrace();
 				}
 			}
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -98,7 +116,7 @@ public class ExecuteTest extends AbstractTest {
 
 			{
 				try {
-					Sheet excelSheet = file.readExcel(Constant.excelFilePath, Constant.testCaseFileName,
+					excelSheet = file.readExcel(Constant.excelFilePath, Constant.testCaseFileName,
 							Constant.keyWordSheet);
 					for (int i = 1; i <= excelSheet.getLastRowNum(); i++) {
 
@@ -118,6 +136,52 @@ public class ExecuteTest extends AbstractTest {
 			}
 		};
 		return testcase.iterator();
+	}
+
+	private Map<String, Integer> testcasePos() {
+		Map<String, Integer> testcasePos = new HashMap<String, Integer>();
+		try {
+			excelSheet = file.readExcel(Constant.excelFilePath, Constant.testCaseFileName, Constant.keyWordSheet);
+
+			for (int i = 1; i <= excelSheet.getLastRowNum(); i++) {
+				Cell testCaseName = excelSheet.getRow(i).getCell(0);
+				if (!testCaseName.getStringCellValue().isEmpty()) {
+					testcasePos.put(testCaseName.getStringCellValue(), i);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return testcasePos;
+
+	}
+
+	private ArrayList<Integer> processIfElse(String condition) {
+		ArrayList<Integer> ifElseBlock = new ArrayList<Integer>();
+		try {
+			excelSheet = file.readExcel(Constant.excelFilePath, Constant.testCaseFileName, Constant.keyWordSheet);
+			for (int i = 1; i <= excelSheet.getLastRowNum(); i++) {
+				Cell actionName = excelSheet.getRow(i).getCell(1);
+				if (actionName.toString().equals(condition.toUpperCase())) {
+					while (i < excelSheet.getLastRowNum()
+							&& !excelSheet.getRow(i + 1).getCell(1).toString().equals("ELSE")) {
+						ifElseBlock.add(i);
+						i++;
+					}
+				} else if (actionName.toString().equals(condition.toUpperCase())) {
+					while (i < excelSheet.getLastRowNum()
+							&& excelSheet.getRow(i + 1).getCell(1).toString().equals("ENDIF")) {
+						ifElseBlock.add(i);
+						i++;
+					}
+
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return ifElseBlock;
 	}
 
 	@AfterClass(alwaysRun = true)

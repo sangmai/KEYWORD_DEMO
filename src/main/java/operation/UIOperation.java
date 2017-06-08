@@ -70,7 +70,7 @@ public class UIOperation extends AbstractAction {
 		}
 	}
 
-	public boolean processCondition(WebDriver driver, String condition) {
+	public static boolean processCondition(WebDriver driver, String condition) {
 		switch (condition) {
 		case "isAlertPresent":
 			return AbstractAction.isAlertPresent(driver);

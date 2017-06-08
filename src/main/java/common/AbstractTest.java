@@ -118,6 +118,7 @@ public class AbstractTest {
 			e.printStackTrace();
 		}
 	}
+
 	public WebDriver openBrowser(String browser) {
 		BrowserManager br = new BrowserManager();
 		WebDriver driver = br.openBrowser(browser);
@@ -164,6 +165,7 @@ public class AbstractTest {
 			System.out.println(e.getMessage());
 		}
 	}
+
 	protected String getUniqueName() {
 		return UUID.randomUUID().toString().replace("-", "");
 	}
@@ -234,7 +236,7 @@ public class AbstractTest {
 
 	/**
 	 * Open the Excel file
-	 * 
+	 *
 	 * @param sheetName
 	 * @throws Exception
 	 */
@@ -251,7 +253,7 @@ public class AbstractTest {
 
 	/**
 	 * Get data in excel file
-	 * 
+	 *
 	 * @param rowNum
 	 * @param colNum
 	 * @return

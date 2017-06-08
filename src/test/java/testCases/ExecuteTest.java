@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -13,6 +14,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.openqa.selenium.WebDriver;
+import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -29,99 +31,100 @@ public class ExecuteTest extends AbstractTest {
 	WebDriver driver;
 	ReadExcelFile file = new ReadExcelFile();
 	Sheet excelSheet;
+	Boolean conditionIfElse, runAble = false;
+	Map<String, Integer> testcasePos = new LinkedHashMap<String, Integer>();
 
 	@BeforeClass(alwaysRun = true)
 	public void setup() {
 		Constant.driver = openBrowser("IE");
 		driver = Constant.driver;
 		Constant.mapVarialbe = new HashMap<String, String>();
-		Constant.currentTestCasePosition = new HashMap<String, Integer>();
+		testcasePos();
 	}
 
 	@Test(dataProvider = "testCasePos")
-	public void executeKeywordTest(String testcaseName, int pos) throws IOException {
-
-		ReadObject object = new ReadObject();
-		Properties allObjects = object.getObjectRepository();
-		UIOperation operation = new UIOperation(driver);
+	public void executeKeywordTest(String testcaseName, int startPos) {
+		// for (Map.Entry<String, Integer> entry : testcasePos.entrySet()) {
+		// if (entry.getKey().equals(testcaseName)) {
+		// System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS
+		// RUNNING\n");
+		// run = true;
+		// break;
+		// }
+		// }
+		// if (!run) {
+		// System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS
+		// SKIPED\n");
+		// throw new SkipException("\nTESTCASE :" + testcaseName.toUpperCase() +
+		// " IS SKIPED\n");
+		// }
+		checkRun(testcaseName, runAble);
 		try {
-			Sheet sheet = file.readExcel(Constant.excelFilePath, Constant.testCaseFileName, Constant.keyWordSheet);
-
-			int lastRowNum = sheet.getLastRowNum() - sheet.getFirstRowNum();
-
-			for (int i = pos + 1; i < lastRowNum + 1; i++) {
-
-				Row row = sheet.getRow(i);
-				Row preRow = sheet.getRow(i - 1);
+			UIOperation operation = new UIOperation(driver);
+			ReadObject object = new ReadObject();
+			Properties allObjects = object.getObjectRepository();
+			excelSheet = file.keywordSheet();
+			int lastRowNum = excelSheet.getLastRowNum() - excelSheet.getFirstRowNum();
+			for (int i = startPos + 1; i <= lastRowNum; i++) {
+				Row row = excelSheet.getRow(i);
+				// Row preRow = excelSheet.getRow(i - 1);
 				String actions = row.getCell(1).toString();
 				String objectName = row.getCell(2).toString();
 				String condition = row.getCell(3).toString();
 				String value = row.getCell(4).toString();
 				String variable = row.getCell(5).toString();
-
-				if (preRow.getCell(0).toString().length() != 0) {
-					System.out.println("\nTESTCASE :" + preRow.getCell(0).toString().toUpperCase() + " IS RUNNING\n");
-				} else {
+				// if (preRow.getCell(0).toString().length() != 0) {
+				// System.out.println("\nTESTCASE :" +
+				// preRow.getCell(0).toString().toUpperCase() + " IS
+				// RUNNING\n");
+				// } else {
+				// System.out.println("\nSTEP: ");
+				// }
+				if (row.getCell(0).toString().length() == 0) {
 					System.out.println("\nSTEP: ");
-				}
-
-				try {
-					if (row.getCell(0).toString().length() == 0) {
-						System.out.println(actions + "----" + objectName + "----" + value + "----" + variable);
-						if (actions.equals("IF")) {
-							if (operation.processCondition(driver, condition) == Boolean.parseBoolean(value)) {
-								for (int j : processIfElse("IF", pos)) {
-									i = j;
-									break;
-								}
-							} else {
-								for (int j : processIfElse("ELSE", pos)) {
-									i = j;
-									break;
-								}
-							}
-						}
-						if (actions.equals("RUNTESTCASE")) {
-							Constant.currentTestCasePosition.put(testcaseName, i + 2);
-							for (Map.Entry<String, Integer> entry : testcasePos().entrySet()) {
-								if (entry.getKey().equals(value)) {
-									this.executeKeywordTest(entry.getKey(), entry.getValue());
-								}
-							}
-						}
-						operation.perform(allObjects, actions, objectName, value, variable);
-					} else {
-						break;
+					System.out.println(actions + "----" + objectName + "----" + value + "----" + variable);
+					if (actions.equals("IF") || actions.equals("ELSE")) {
+						i = processIfElse(driver, condition, value, i, actions);
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
+					if (actions.equals("RUNTESTCASE")) {
+						runtestCase(i, value);
+					}
+					operation.perform(allObjects, actions, objectName, value, variable);
+				} else {
+					break;
 				}
 			}
-		} catch (
 
-		Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void checkRun(String testcaseName, Boolean run) {
+		for (Map.Entry<String, Integer> entry : testcasePos.entrySet()) {
+			if (entry.getKey().equals(testcaseName)) {
+				System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS RUNNING\n");
+				run = true;
+				break;
+			}
+		}
+		if (!run) {
+			System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS SKIPED\n");
+			throw new SkipException("\nTESTCASE :" + testcaseName.toUpperCase() + " IS SKIPED\n");
 		}
 	}
 
 	@DataProvider(name = "testCasePos")
 	private Iterator<Object[]> getTestcase() throws IOException {
-
 		Collection<Object[]> testcase = new ArrayList<Object[]>() {
 			private static final long serialVersionUID = 1L;
-
 			{
 				try {
-					excelSheet = file.readExcel(Constant.excelFilePath, Constant.testCaseFileName,
-							Constant.keyWordSheet);
+					excelSheet = file.keywordSheet();
 					for (int i = 1; i <= excelSheet.getLastRowNum(); i++) {
-
 						Cell testCaseName = excelSheet.getRow(i).getCell(0);
-
 						if (!testCaseName.getStringCellValue().isEmpty()) {
-
 							add(new Object[] { excelSheet.getRow(i).getCell(0).getStringCellValue(), i });
-
 						}
 					}
 
@@ -134,50 +137,79 @@ public class ExecuteTest extends AbstractTest {
 		return testcase.iterator();
 	}
 
-	private Map<String, Integer> testcasePos() {
-		Map<String, Integer> testcasePos = new HashMap<String, Integer>();
+	private void testcasePos() {
 		try {
-			excelSheet = file.readExcel(Constant.excelFilePath, Constant.testCaseFileName, Constant.keyWordSheet);
-
+			excelSheet = file.keywordSheet();
 			for (int i = 1; i <= excelSheet.getLastRowNum(); i++) {
-				Cell testCaseName = excelSheet.getRow(i).getCell(0);
-				if (!testCaseName.getStringCellValue().isEmpty()) {
-					testcasePos.put(testCaseName.getStringCellValue(), i);
+				String testCaseName = excelSheet.getRow(i).getCell(0).toString();
+				if (!testCaseName.isEmpty()) {
+					testcasePos.put(testCaseName, i);
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return testcasePos;
 
 	}
 
-	private ArrayList<Integer> processIfElse(String condition, int startPosition) {
-		ArrayList<Integer> ifElseBlock = new ArrayList<Integer>();
-		try {
-			excelSheet = file.readExcel(Constant.excelFilePath, Constant.testCaseFileName, Constant.keyWordSheet);
-			for (int i = startPosition + 1; i <= excelSheet.getLastRowNum(); i++) {
-				Cell actionName = excelSheet.getRow(i).getCell(1);
-				if (actionName.toString().equals(condition.toUpperCase())) {
-					while (i < excelSheet.getLastRowNum()
-							&& !excelSheet.getRow(i + 1).getCell(1).toString().equals("ELSE")) {
-						ifElseBlock.add(i);
-						i++;
-					}
-				} else if (actionName.toString().equals(condition.toUpperCase())) {
-					while (i < excelSheet.getLastRowNum()
-							&& !excelSheet.getRow(i + 1).getCell(1).toString().equals("ENDIF")) {
-						ifElseBlock.add(i);
-						i++;
-					}
+	private int processIfElse(WebDriver driver, String condition, String value, int pos, String actions) {
+		int currentPos = 0;
 
+		try {
+			excelSheet = file.keywordSheet();
+			for (int i = pos; i <= excelSheet.getLastRowNum(); i++) {
+				if (actions.equals("IF")) {
+					if (UIOperation.processCondition(driver, condition) == Boolean.parseBoolean(value)) {
+						conditionIfElse = true;
+						currentPos = i;
+						break;
+					} else {
+						while (!excelSheet.getRow(i + 1).getCell(1).toString().equals("ELSE")) {
+							i++;
+						}
+						currentPos = i;
+						break;
+					}
+				}
+				if (actions.equals("ELSE")) {
+					if (conditionIfElse) {
+						while (!excelSheet.getRow(i + 1).getCell(1).toString().equals("ENDIF")) {
+							i++;
+						}
+						currentPos = i;
+						break;
+					}
+					currentPos = i;
+					break;
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return currentPos;
+	}
 
-		return ifElseBlock;
+	private void runtestCase(int pos, String testcaseToRun) throws IOException {
+		// Iterator<Object[]> test = getTestcase();
+		try {
+			excelSheet = file.keywordSheet();
+			for (int i = pos; i <= excelSheet.getLastRowNum(); i++) {
+				String actions = excelSheet.getRow(i).getCell(1).toString();
+				if (actions.equals("RUNTESTCASE")) {
+					for (Map.Entry<String, Integer> entry : testcasePos.entrySet()) {
+						if (entry.getKey().equals(testcaseToRun)) {
+							// if (test.equals(testcaseToRun)) {
+							// test.remove();
+							// }
+							this.executeKeywordTest(entry.getKey(), entry.getValue());
+						}
+					}
+					testcasePos.remove(testcaseToRun);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@AfterClass(alwaysRun = true)

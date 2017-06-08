@@ -7,7 +7,7 @@ import org.openqa.selenium.WebDriver;
 public class Constant {
 	public static WebDriver driver = null;
 	public static Map<String, String> mapVarialbe;
-	public static Map<String, Integer> currentTestCasePosition;
+	public static Map<String, Integer> testcasePos;
 	public static String currentWindows = null;
 	public static final int longWaitTime = 8;
 	public static final int shortWaitTime = 5;

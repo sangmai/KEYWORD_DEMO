@@ -44,20 +44,6 @@ public class ExecuteTest extends AbstractTest {
 
 	@Test(dataProvider = "testCasePos")
 	public void executeKeywordTest(String testcaseName, int startPos) {
-		// for (Map.Entry<String, Integer> entry : testcasePos.entrySet()) {
-		// if (entry.getKey().equals(testcaseName)) {
-		// System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS
-		// RUNNING\n");
-		// run = true;
-		// break;
-		// }
-		// }
-		// if (!run) {
-		// System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS
-		// SKIPED\n");
-		// throw new SkipException("\nTESTCASE :" + testcaseName.toUpperCase() +
-		// " IS SKIPED\n");
-		// }
 		checkRun(testcaseName, runAble);
 		try {
 			UIOperation operation = new UIOperation(driver);
@@ -67,19 +53,11 @@ public class ExecuteTest extends AbstractTest {
 			int lastRowNum = excelSheet.getLastRowNum() - excelSheet.getFirstRowNum();
 			for (int i = startPos + 1; i <= lastRowNum; i++) {
 				Row row = excelSheet.getRow(i);
-				// Row preRow = excelSheet.getRow(i - 1);
 				String actions = row.getCell(1).toString();
 				String objectName = row.getCell(2).toString();
 				String condition = row.getCell(3).toString();
 				String value = row.getCell(4).toString();
 				String variable = row.getCell(5).toString();
-				// if (preRow.getCell(0).toString().length() != 0) {
-				// System.out.println("\nTESTCASE :" +
-				// preRow.getCell(0).toString().toUpperCase() + " IS
-				// RUNNING\n");
-				// } else {
-				// System.out.println("\nSTEP: ");
-				// }
 				if (row.getCell(0).toString().length() == 0) {
 					System.out.println("\nSTEP: ");
 					System.out.println(actions + "----" + objectName + "----" + value + "----" + variable);
@@ -101,6 +79,7 @@ public class ExecuteTest extends AbstractTest {
 	}
 
 	private void checkRun(String testcaseName, Boolean run) {
+
 		for (Map.Entry<String, Integer> entry : testcasePos.entrySet()) {
 			if (entry.getKey().equals(testcaseName)) {
 				System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS RUNNING\n");
@@ -190,7 +169,6 @@ public class ExecuteTest extends AbstractTest {
 	}
 
 	private void runtestCase(int pos, String testcaseToRun) throws IOException {
-		// Iterator<Object[]> test = getTestcase();
 		try {
 			excelSheet = file.keywordSheet();
 			for (int i = pos; i <= excelSheet.getLastRowNum(); i++) {
@@ -198,9 +176,6 @@ public class ExecuteTest extends AbstractTest {
 				if (actions.equals("RUNTESTCASE")) {
 					for (Map.Entry<String, Integer> entry : testcasePos.entrySet()) {
 						if (entry.getKey().equals(testcaseToRun)) {
-							// if (test.equals(testcaseToRun)) {
-							// test.remove();
-							// }
 							this.executeKeywordTest(entry.getKey(), entry.getValue());
 						}
 					}

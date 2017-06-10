@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Default suite">
+	<listeners>
+		<listener class-name="common.JiraListener" />
+		<listener class-name="common.MethodListener" />
+		<listener class-name="common.CustomTestNGListener" />
+<!-- 		<listener class-name="common.TestAnnotationTransformerListener" />
+		<listener class-name="common.ExcelReportListener" />
+		<listener class-name="common.ExtentTestNGITestListener" />
+		<listener class-name="common.ExtentTestNGIReporterListener" />
+		<listener class-name="org.uncommons.reportng.HTMLReporter" />
+		<listener class-name="org.uncommons.reportng.JUnitXMLReporter" /> -->
+	</listeners>
   <test name="Run Testcases">
     <classes>
       <class name="testCases.ExecuteTest"/>

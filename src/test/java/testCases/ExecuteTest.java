@@ -14,7 +14,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.openqa.selenium.WebDriver;
-import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -23,6 +22,7 @@ import org.testng.annotations.Test;
 import common.AbstractTest;
 import common.Constant;
 import excelExportAndFileIO.ReadExcelFile;
+import junit.framework.Assert;
 import operation.ReadObject;
 import operation.UIOperation;
 
@@ -89,7 +89,9 @@ public class ExecuteTest extends AbstractTest {
 		}
 		if (!run) {
 			System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS SKIPED\n");
-			throw new SkipException("\nTESTCASE :" + testcaseName.toUpperCase() + " IS SKIPED\n");
+			// throw new SkipException("\nTESTCASE :" +
+			// testcaseName.toUpperCase() + " IS SKIPED\n");
+			Assert.fail("Test");
 		}
 	}
 

@@ -28,10 +28,12 @@ import operation.UIOperation;
 
 public class ExecuteTest extends AbstractTest {
 
-	WebDriver driver;
+	private WebDriver driver;
 	ReadExcelFile file = new ReadExcelFile();
+	public static String testcaseName;
 	Sheet excelSheet;
-	Boolean conditionIfElse, runAble = false;
+	Boolean conditionIfElse = false;
+	Boolean runAble = false;
 	Map<String, Integer> testcasePos = new LinkedHashMap<String, Integer>();
 
 	@BeforeClass(alwaysRun = true)
@@ -44,6 +46,7 @@ public class ExecuteTest extends AbstractTest {
 
 	@Test(dataProvider = "testCasePos")
 	public void executeKeywordTest(String testcaseName, int startPos) {
+		ExecuteTest.testcaseName = testcaseName;
 		checkRun(testcaseName, runAble);
 		try {
 			UIOperation operation = new UIOperation(driver);
@@ -83,6 +86,7 @@ public class ExecuteTest extends AbstractTest {
 		for (Map.Entry<String, Integer> entry : testcasePos.entrySet()) {
 			if (entry.getKey().equals(testcaseName)) {
 				System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS RUNNING\n");
+				Assert.fail("Test Bug");
 				run = true;
 				break;
 			}
@@ -91,7 +95,7 @@ public class ExecuteTest extends AbstractTest {
 			System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS SKIPED\n");
 			// throw new SkipException("\nTESTCASE :" +
 			// testcaseName.toUpperCase() + " IS SKIPED\n");
-			Assert.fail("Test");
+			Assert.fail("Test Bug");
 		}
 	}
 
@@ -187,6 +191,10 @@ public class ExecuteTest extends AbstractTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String getTestcaseName() {
+		return testcaseName;
 	}
 
 	@AfterClass(alwaysRun = true)

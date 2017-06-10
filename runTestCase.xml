@@ -4,7 +4,6 @@
 	<listeners>
 		<listener class-name="common.JiraListener" />
 		<listener class-name="common.MethodListener" />
-		<listener class-name="common.CustomTestNGListener" />
 <!-- 		<listener class-name="common.TestAnnotationTransformerListener" />
 		<listener class-name="common.ExcelReportListener" />
 		<listener class-name="common.ExtentTestNGITestListener" />

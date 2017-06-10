@@ -14,13 +14,16 @@ import net.rcarz.jiraclient.Field;
 import net.rcarz.jiraclient.Issue;
 import net.rcarz.jiraclient.JiraClient;
 import net.rcarz.jiraclient.JiraException;
+import testCases.ExecuteTest;
 
 public class JiraListener implements IInvokedMethodListener, ITestListener {
-	BasicCredentials auth = new BasicCredentials("maisang90dn@gmail.com", "Abcd123!@#");
-	JiraClient jira = new JiraClient("https://sangmai.atlassian.net", auth);
-	Issue newIssue;
-	String issue;
-	String project = "SEDEMO";
+
+	private final BasicCredentials auth = new BasicCredentials("maisang90dn@gmail.com", "Abcd123!@#");
+	private final JiraClient jira = new JiraClient("https://sangmai.atlassian.net", auth);
+	private Issue newIssue;
+	private String issue;
+	private final String project = "SEDEMO";
+	ITestResult result;
 
 	@Override
 	public void onTestStart(ITestResult result) {
@@ -30,7 +33,6 @@ public class JiraListener implements IInvokedMethodListener, ITestListener {
 	@Override
 	public void onTestSuccess(ITestResult result) {
 		// TODO Auto-generated method stub
-		CustomTestNGListener.getCurrentTestHelper(result.getInstance());
 
 	}
 
@@ -38,7 +40,9 @@ public class JiraListener implements IInvokedMethodListener, ITestListener {
 	public void onTestFailure(ITestResult result) {
 		try {
 			newIssue = jira.createIssue(project, "Bug").field(Field.SUMMARY, "Bug report by Automation Testing")
-					.field(Field.DESCRIPTION, "Please re-check Testcase" + result.getTestName())
+					.field(Field.DESCRIPTION,
+							"Please re-check Testcase " + ExecuteTest.getTestcaseName() + " \nCause by : "
+									+ result.getThrowable().getMessage())
 					.field(Field.REPORTER, "admin").field(Field.ASSIGNEE, "admin").execute();
 		} catch (JiraException e) {
 			System.out.println(e.getMessage());
@@ -59,7 +63,6 @@ public class JiraListener implements IInvokedMethodListener, ITestListener {
 
 	@Override
 	public void onStart(ITestContext context) {
-		// TODO Auto-generated method stub
 		try {
 			newIssue = jira.createIssue("SEDEMO", "Task").field(Field.SUMMARY, "Start Automation Test")
 					.field(Field.DESCRIPTION, "Automation Run Regression via Selenium. This is Auto Task")
@@ -77,7 +80,13 @@ public class JiraListener implements IInvokedMethodListener, ITestListener {
 
 	@Override
 	public void onFinish(ITestContext context) {
-
+		try {
+			newIssue = jira.getIssue(issue);
+			newIssue.addComment("Automation test is completed at " + getTime(result.getEndMillis()));
+			newIssue.transition().execute("Done");
+		} catch (JiraException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	@Override
@@ -89,13 +98,8 @@ public class JiraListener implements IInvokedMethodListener, ITestListener {
 	@Override
 	public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
 		// TODO Auto-generated method stub
-		try {
-			newIssue = jira.getIssue(issue);
-			newIssue.addComment("Automation test is completed at " + getTime(testResult.getEndMillis()));
-			newIssue.transition().execute("Done");
-		} catch (JiraException e) {
-			System.out.println(e.getMessage());
-		}
+		this.result = testResult;
+
 	}
 
 	private String getTime(long millis) {

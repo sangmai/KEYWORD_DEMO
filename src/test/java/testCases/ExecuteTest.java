@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.openqa.selenium.WebDriver;
+import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -22,7 +23,6 @@ import org.testng.annotations.Test;
 import common.AbstractTest;
 import common.Constant;
 import excelExportAndFileIO.ReadExcelFile;
-import junit.framework.Assert;
 import operation.ReadObject;
 import operation.UIOperation;
 
@@ -35,6 +35,7 @@ public class ExecuteTest extends AbstractTest {
 	Boolean conditionIfElse = false;
 	Boolean runAble = false;
 	Map<String, Integer> testcasePos = new LinkedHashMap<String, Integer>();
+	Map<String, Integer> testcaseRunBefore = new LinkedHashMap<String, Integer>();
 
 	@BeforeClass(alwaysRun = true)
 	public void setup() {
@@ -83,19 +84,25 @@ public class ExecuteTest extends AbstractTest {
 
 	private void checkRun(String testcaseName, Boolean run) {
 
-		for (Map.Entry<String, Integer> entry : testcasePos.entrySet()) {
-			if (entry.getKey().equals(testcaseName)) {
-				System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS RUNNING\n");
-				Assert.fail("Test Bug");
-				run = true;
-				break;
+		if (testcaseRunBefore.size() == 0) {
+			System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS RUNNING\n");
+			run = true;
+		} else {
+			for (Map.Entry<String, Integer> entry : testcaseRunBefore.entrySet()) {
+				if (!entry.getKey().equals(testcaseName)) {
+					System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS RUNNING\n");
+					// Assert.fail("Test Bug");
+					run = true;
+					break;
+				}
 			}
-		}
-		if (!run) {
-			System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS SKIPED\n");
-			// throw new SkipException("\nTESTCASE :" +
-			// testcaseName.toUpperCase() + " IS SKIPED\n");
-			Assert.fail("Test Bug");
+			if (!run) {
+				System.out.println("\nTESTCASE :" + testcaseName.toUpperCase() + " IS SKIPED\n");
+				throw new SkipException("\nTESTCASE :" + testcaseName.toUpperCase() + " IS SKIPED\n");
+
+				// Assert.fail("Test Bug");
+
+			}
 		}
 	}
 
@@ -185,7 +192,7 @@ public class ExecuteTest extends AbstractTest {
 							this.executeKeywordTest(entry.getKey(), entry.getValue());
 						}
 					}
-					testcasePos.remove(testcaseToRun);
+					testcaseRunBefore.put(testcaseToRun, pos);
 				}
 			}
 		} catch (Exception e) {

@@ -2,8 +2,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Default suite">
 	<listeners>
-		<listener class-name="common.JiraListener" />
-		<listener class-name="common.MethodListener" />
+<!-- 		<listener class-name="common.JiraListener" />
+ -->		<listener class-name="common.MethodListener" />
 <!-- 		<listener class-name="common.TestAnnotationTransformerListener" />
 		<listener class-name="common.ExcelReportListener" />
 		<listener class-name="common.ExtentTestNGITestListener" />
